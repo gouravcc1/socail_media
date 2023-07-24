@@ -12,7 +12,6 @@ interface User extends Document {
   password: string;
   passwordConfirm: string;
 }
-
 const UserSchema: Schema<User> = new mongoose.Schema({
   name: {
     type: String,
@@ -46,7 +45,7 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     type: String,
     default: "profile.png",
   },
-  password: {
+  password:{
     type: String,
     required: [true, "provide password"],
     minlength: [8, "password must be at least 8 characters long"],
@@ -61,7 +60,7 @@ const UserSchema: Schema<User> = new mongoose.Schema({
 
 UserSchema.pre<User>("save", function (next) {
     if (this.password !== this.passwordConfirm) {
-      return next(new Error("Passwords do not match."));
+      return next(new Error("Password and confirmPassword do not match."));
     }
     next();
   });
