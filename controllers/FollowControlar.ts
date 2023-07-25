@@ -11,9 +11,10 @@ export const followAUser: any = CatchAsync(
 
     if (!loggeduser || !user)
       return next(new AppError("no user found with that id", 404));
-      if(loggeduser._id===user._id) return next(new AppError('cannot follow myself',400));
-      let oldfollwing=loggeduser.numberOfFollowing;
-      let oldfollwers=user.numberOfFollowers;
+    if (loggeduser._id === user._id)
+      return next(new AppError("cannot follow myself", 400));
+    let oldfollwing = loggeduser.numberOfFollowing;
+    let oldfollwers = user.numberOfFollowers;
     const followdata = await Follow.findOne({
       follower: loggeduser._id,
       following: user._id,
@@ -27,27 +28,23 @@ export const followAUser: any = CatchAsync(
       loggeduser = await User.findByIdAndUpdate(req.user.id, {
         numberOfFollowing: oldfollwing + 1,
       });
-      if(loggeduser) loggeduser.numberOfFollowing++;
+      if (loggeduser) loggeduser.numberOfFollowing++;
 
       user = await User.findByIdAndUpdate(req.params.userId, {
         numberOfFollowers: oldfollwers + 1,
       });
-      if(user) user.numberOfFollowers++;
-
+      if (user) user.numberOfFollowers++;
     } else {
-      const followProfile = await Follow.findOneAndDelete({
-        follower: req.user.id,
-        following: req.params.userId,
-      });
+      // unfollow A user
+      const followProfile = await Follow.findByIdAndDelete(followdata._id);
       loggeduser = await User.findByIdAndUpdate(req.user.id, {
         numberOfFollowing: oldfollwing - 1,
       });
-      if(loggeduser) loggeduser.numberOfFollowing--;
+      if (loggeduser) loggeduser.numberOfFollowing--;
       user = await User.findByIdAndUpdate(req.params.userId, {
         numberOfFollowers: oldfollwers - 1,
       });
-      if(user) user.numberOfFollowers--;
-
+      if (user) user.numberOfFollowers--;
     }
     res.status(200).json({
       status: "success",
