@@ -5,6 +5,13 @@ import UserRoute from './routes/UserRoute'
 // import bodyParser from 'body-parser';
 
 const app = express();
+declare global {
+    namespace Express {
+      interface Request {
+        user?: any;
+      }
+    }
+  }
 const dotenv = require("dotenv");
 
 app.use(express.json()); // Parse JSON data in request body
