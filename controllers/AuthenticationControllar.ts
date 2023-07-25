@@ -11,7 +11,9 @@ const singedToken = (id: string) => {
     { id: id },
     process.env.JWT_SECRET ? process.env.JWT_SECRET : "",
     {
-      expiresIn: process.env.JWT_TOKEN_EXPIRE_IN?process.env.JWT_TOKEN_EXPIRE_IN:"90d"
+      expiresIn: process.env.JWT_TOKEN_EXPIRE_IN
+        ? process.env.JWT_TOKEN_EXPIRE_IN
+        : "90d",
     }
   );
 };
@@ -51,27 +53,61 @@ const verifyJwt = (token: string, secret: string) => {
     });
   });
 };
+export const isLoggedIn: any = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    // check the authorisation header exists
+    let token;
+
+    if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+
+      if (!token) return next();
+
+      const decoded: any = await verifyJwt(
+        String(token),
+        process.env.JWT_SECRET || ""
+      );
+
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return next();
+      }
+
+      res.locals.user = user;
+      return next();
+    }
+    return next();
+  }
+);
 export const protect: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // check the authorisation header exists
     let token, hd;
     if (req.headers.authorization) hd = req.headers.authorization;
     // console.log(hd)
-    if (!hd) return next(new AppError("user not logged in", 403));
+    // if (!hd) return next(new AppError("user not logged in", 403));
+
     hd = String(hd);
-    if(!hd.startsWith('Bearer')) return next(new AppError("user not logged in", 403));
-    token = hd.split(' ')[1];
-      const decoded:any = await verifyJwt(
-        String(token),
-        process.env.JWT_SECRET || ""
-      );
-      const user=await User.findById(decoded.id);
-      if(!user){
-        return next(new AppError("user not found", 403));
-      }
-      // console.log(decoded.iat , Date.now());
-      req.user=user;
-      next();
+
+    if (hd && hd.startsWith("Bearer")) {
+      token = hd.split(" ")[1];
+    } else if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+    }
+    if (!token) return next(new AppError("user not logged in", 403));
+
+    const decoded: any = await verifyJwt(
+      String(token),
+      process.env.JWT_SECRET || ""
+    );
+
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return next(new AppError("user not found", 403));
+    }
+    // console.log(req.cookies);
+    req.user = user;
+    next();
   }
 );
 export const signUp: any = CatchAsync(
@@ -106,7 +142,7 @@ export const login: any = CatchAsync(
         userName: req.body.userName,
       }).select("+password");
     }
-    console.log(req.headers);
+    // console.log(req.headers);
 
     if (!user || !(await comparePassword(req.body.password, user.password))) {
       return next(new AppError("wrong username or mail or password", 400));
