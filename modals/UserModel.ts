@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import validator from "validator";
-import bcrypt from 'bcrypt'
+import bcrypt from "bcrypt";
 interface User extends Document {
   name: string;
   userName: string;
@@ -10,7 +10,7 @@ interface User extends Document {
   createdAt: Date;
   profilePic: string;
   password: string;
-  passwordConfirm: string|undefined;
+  passwordConfirm: string | undefined;
 }
 const UserSchema: Schema<User> = new mongoose.Schema({
   name: {
@@ -45,7 +45,7 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     type: String,
     default: "profile.png",
   },
-  password:{
+  password: {
     type: String,
     required: [true, "provide password"],
     minlength: [8, "password must be at least 8 characters long"],
@@ -59,16 +59,16 @@ const UserSchema: Schema<User> = new mongoose.Schema({
 });
 // to check password is same as passwordConfirm
 UserSchema.pre<User>("save", function (next) {
-    if (this.password !== this.passwordConfirm) {
-      return next(new Error("Password and confirmPassword do not match."));
-    }
-    next();
-  });
-  // to encrypt password with bcrypt
-UserSchema.pre('save',async function (next){
-  if(!this.isModified('password')) next();
+  if (this.password !== this.passwordConfirm) {
+    return next(new Error("Password and confirmPassword do not match."));
+  }
+  next();
+});
+// to encrypt password with bcrypt
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
-})
+});
 
 export default mongoose.model<User>("User", UserSchema);

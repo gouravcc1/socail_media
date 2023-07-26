@@ -6,6 +6,8 @@ import { NextFunction } from "express";
 interface IFollow extends Document {
   follower: mongoose.ObjectId;
   following: mongoose.ObjectId;
+  createdAt:Date,
+  userName:string,
 }
 
 const FollowSchema = new Schema<IFollow>({
@@ -19,6 +21,14 @@ const FollowSchema = new Schema<IFollow>({
     ref: "User", // Assuming it references the User collection
     required: [true, "Who are you going to follow? User does not exist."],
   },
+  userName:{
+    type:String,
+    required:[true,'username should be there'],
+  },
+  createdAt:{
+    type:Date,
+    default:Date.now()
+  }
 });
 
 FollowSchema.index({ follower: 1, following: 1 }, { unique: true });

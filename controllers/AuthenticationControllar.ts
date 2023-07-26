@@ -57,7 +57,6 @@ export const isLoggedIn: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // check the authorisation header exists
     let token;
-
     if (req.cookies.jwt) {
       token = req.cookies.jwt;
 
@@ -82,25 +81,22 @@ export const isLoggedIn: any = CatchAsync(
 export const protect: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     // check the authorisation header exists
-    let token, hd;
-    if (req.headers.authorization) hd = req.headers.authorization;
-    // console.log(hd)
-    // if (!hd) return next(new AppError("user not logged in", 403));
-
-    hd = String(hd);
-
-    if (hd && hd.startsWith("Bearer")) {
-      token = hd.split(" ")[1];
+    let token, authHeader;
+    if (req.headers.authorization) {
+      authHeader = req.headers.authorization;
+      authHeader = String(authHeader);
+    }
+    //varify with 
+    if (authHeader && authHeader.startsWith("Bearer")) {
+      token = authHeader.split(" ")[1];
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     }
     if (!token) return next(new AppError("user not logged in", 403));
-
     const decoded: any = await verifyJwt(
       String(token),
       process.env.JWT_SECRET || ""
     );
-
     const user = await User.findById(decoded.id);
     if (!user) {
       return next(new AppError("user not found", 403));
@@ -112,6 +108,7 @@ export const protect: any = CatchAsync(
 );
 export const signUp: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // create user with provided info
     const newUser = await User.create({
       name: req.body.name,
       userName: req.body.userName,
@@ -119,35 +116,47 @@ export const signUp: any = CatchAsync(
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
     });
+    //send token with new cookies 
     sendJWTTOken(newUser, 200, res);
   }
 );
 export const login: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     let user: any;
-    if (!req.body.email && !req.body.userName) {
+    const email = req.body.email, // get user email
+      userName = req.body.userName; // get users  user_name
+    if (!email && !userName){
       return next(new AppError("provide an email or username", 400));
     }
     if (!req.body.password) {
       return next(new AppError("provide password", 400));
     }
-    if (req.body.id) {
-      user = await User.findById(req.body.id).select("+password");
-    } else if (req.body.email) {
+    // find with email
+    if (email){
       user = await User.findOne({
-        email: req.body.email,
+        email: email,
       }).select("+password");
-    } else if (req.body.userName) {
+      //find with username
+    } else if(userName){
       user = await User.findOne({
-        userName: req.body.userName,
+        userName: userName,
       }).select("+password");
     }
-    // console.log(req.headers);
-
+    // compare saved password with provided password
     if (!user || !(await comparePassword(req.body.password, user.password))) {
       return next(new AppError("wrong username or mail or password", 400));
     }
+    // send token and response
     sendJWTTOken(user, 200, res);
     return;
+  }
+);
+
+export const logout: any = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie("jwt", ""); // send empty cookie to revoke all access
+    res.status(200).json({
+      status: "success",
+    });
   }
 );
