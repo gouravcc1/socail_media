@@ -36,3 +36,18 @@ export const LikeOrUnlikePost: any = CatchAsync(
     });
   }
 );
+
+export const GetAllLikeForAPost: any = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    //   let post = await Post.findById(req.params.postId);
+    //   if (!post) return next(new AppError("no post found with that id", 404));
+    const like = await Like.find({
+      post: req.params.postId,
+    });
+    res.status(200).json({
+      status: "success",
+      result: like.length,
+      data: { like },
+    });
+  }
+);

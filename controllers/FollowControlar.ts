@@ -56,3 +56,5 @@ export const followAUser: any = CatchAsync(
     });
   }
 );
+
+

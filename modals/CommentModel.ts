@@ -1,14 +1,14 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose , { Schema, Document } from "mongoose";
 
 import validator from "validator";
 import User from "./UserModel"
 
-interface Comment  {
+interface IComment extends Document {
   user: mongoose.ObjectId,
-  Post:mongoose.ObjectId,
+  post:mongoose.ObjectId,
   comment:string
 }
-const CommentSchema = new mongoose.Schema({
+const CommentSchema = new Schema<IComment>({
   user: {
     type: mongoose.SchemaTypes.ObjectId,
     required:[true,'comment must have a user']
@@ -23,4 +23,4 @@ const CommentSchema = new mongoose.Schema({
   }
 
 });
-export default mongoose.model<Comment>("Comment", CommentSchema);
+export default mongoose.model<IComment>("Comment", CommentSchema);

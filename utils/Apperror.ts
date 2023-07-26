@@ -1,5 +1,13 @@
-import IAppError from './IAppError'; // Import the IAppError interface
+// import IAppError from './IAppError'; // Import the IAppError interface
 
+// IAppError.ts
+interface IAppError {
+  statusCode: number;
+  status: string;
+  isOperational: boolean;
+}
+
+// export default IAppError;
 class AppError extends Error implements IAppError {
   statusCode: number;     // Define the property 'statusCode'
   status: string;         // Define the property 'status'
