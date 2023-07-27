@@ -5,10 +5,11 @@ import UserRoute from "./routes/UserRoute";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { isLoggedIn } from "./controllers/AuthenticationControllar";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import ExpressMongoSanitize from "express-mongo-sanitize";
 
 const app = express();
-// app.use(bodyParser())
-app.use(cookieParser());
 declare global {
   namespace Express {
     interface Request {
@@ -16,14 +17,24 @@ declare global {
     }
   }
 }
-const dotenv = require("dotenv");
+// security middleware
+app.use(helmet());
+app.use(cookieParser());
+app.use(ExpressMongoSanitize());
+const limiter = rateLimit({
+  max: 500,
+  windowMs: 60 * 60 * 1000,
+  message: "to many requests from this ip try after some time",
+});
+app.use(limiter);
 
-app.use(express.json()); // Parse JSON data in request body
+
+app.use(
+  express.json({
+    limit: "20kb",
+  })
+); // Parse JSON data in request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data in request body
-
-// app.use('/',(req:Request,res:Response,next:Function)=>{
-//       res.send('app is working');
-// })
 app.use("/", isLoggedIn);
 app.use("/posts", PostRoute);
 app.use("/users", UserRoute);

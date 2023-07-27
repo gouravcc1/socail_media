@@ -1,5 +1,3 @@
-// import IAppError from './IAppError'; // Import the IAppError interface
-
 // IAppError.ts
 interface IAppError {
   statusCode: number;
@@ -7,10 +5,9 @@ interface IAppError {
   isOperational: boolean;
 }
 
-// export default IAppError;
 class AppError extends Error implements IAppError {
-  statusCode: number;     // Define the property 'statusCode'
-  status: string;         // Define the property 'status'
+  statusCode: number; // Define the property 'statusCode'
+  status: string; // Define the property 'status'
   isOperational: boolean; // Define the property 'isOperational'
   code?: number; //optional
   constructor(message: string, statusCode: number) {
@@ -18,7 +15,7 @@ class AppError extends Error implements IAppError {
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
     this.isOperational = true;
-    this.code=this.code
+    this.code = this.code;
     Error.captureStackTrace(this, this.constructor);
   }
 }

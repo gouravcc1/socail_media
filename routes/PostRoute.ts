@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { getAPost, postApost } from "./../controllers/PostControllar";
+import { deleteApost, getAllPostofFOllowing, postApost } from "./../controllers/PostControllar";
 import { protect } from "./../controllers/AuthenticationControllar";
 import {
   GetAllLikeForAPost,
@@ -11,11 +11,13 @@ import {
   postAcomment,
 } from "../controllers/CommentControllar";
 const router = express.Router();
-router.route("/").get(protect, getAPost).post(protect, postApost);
+router.route("/").get(protect, getAllPostofFOllowing).post(protect, postApost);
+router.route('/:postId').delete(protect,deleteApost);
 router
   .route("/like/:postId")
   .patch(protect, LikeOrUnlikePost)
-  .get(protect, GetAllLikeForAPost);
+  .get(protect, GetAllLikeForAPost)
+
 
 router
   .route("/comment/:postId")
