@@ -9,7 +9,7 @@ export const postApost: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const post = await Post.create({
       user: req.user.id,
-      image: req.body.image,
+      image: req.file?.filename,
       userName: req.user.userName,
     });
     res.status(200).json({

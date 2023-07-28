@@ -88,7 +88,7 @@ export const updateLoggedUser: any = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findByIdAndUpdate(req.user.id, {
       name: req.body.name,
-      profilePic: req.body.profilePic,
+      image: req.file?req.file.filename:undefined,
     });
     res.status(200).json({
       status: "success",

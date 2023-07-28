@@ -10,15 +10,14 @@ import {
   deleteAcomment,
   postAcomment,
 } from "../controllers/CommentControllar";
+import { resizeUserPhoto, uploadPhotoMiddlleware } from "../controllers/uploadImageControllar";
 const router = express.Router();
-router.route("/").get(protect, getAllPostofFOllowing).post(protect, postApost);
+router.route("/").get(protect, getAllPostofFOllowing).post(protect,uploadPhotoMiddlleware,resizeUserPhoto, postApost);
 router.route('/:postId').delete(protect,deleteApost);
 router
   .route("/like/:postId")
   .patch(protect, LikeOrUnlikePost)
   .get(protect, GetAllLikeForAPost)
-
-
 router
   .route("/comment/:postId")
   .patch(protect, postAcomment)

@@ -115,7 +115,7 @@ export const signUp: any = CatchAsync(
       email: req.body.email,
       password: req.body.password,
       passwordConfirm: req.body.passwordConfirm,
-      profilePic:req.body.profilePic
+      image:req.file?req.file.filename:undefined,
     });
     //send token with new cookies 
     sendJWTTOken(newUser, 200, res);

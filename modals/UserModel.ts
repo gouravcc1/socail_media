@@ -8,7 +8,7 @@ interface User extends Document {
   numberOfFollowers: number;
   numberOfFollowing: number;
   createdAt: Date;
-  profilePic: string;
+  image: string;
   password: string;
   passwordConfirm: string | undefined;
 }
@@ -41,7 +41,7 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  profilePic: {
+  image: {
     type: String,
     default: "profile.png",
   },
