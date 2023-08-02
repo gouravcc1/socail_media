@@ -20,7 +20,7 @@ declare global {
 }
 // app.use(cors.)
 const options: cors.CorsOptions = {
-  origin: "*",
+  origin: '*',
 };
 app.use(cors(options));
 // security middleware
@@ -40,6 +40,7 @@ app.use(
   })
 ); // Parse JSON data in request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data in request body
+app.use(bodyParser.json());
 // app.use("/", (req, res, next) => {
 //   return res.status(200).json({
 //     result: "success",
