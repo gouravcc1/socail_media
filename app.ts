@@ -8,8 +8,7 @@ import { isLoggedIn } from "./controllers/AuthenticationControllar";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
-import cors from "cors"
-
+import cors from "cors";
 
 const app = express();
 declare global {
@@ -21,7 +20,7 @@ declare global {
 }
 // app.use(cors.)
 const options: cors.CorsOptions = {
-  origin: '*'
+  origin: "*",
 };
 app.use(cors(options));
 // security middleware
@@ -35,14 +34,18 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-
 app.use(
   express.json({
     limit: "20kb",
   })
 ); // Parse JSON data in request body
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data in request body
-app.use("/", isLoggedIn);
+// app.use("/", (req, res, next) => {
+//   return res.status(200).json({
+//     result: "success",
+//     data: "website is working",
+//   });
+// });
 app.use("/posts", PostRoute);
 app.use("/users", UserRoute);
 app.use(globleErrorHandler);
