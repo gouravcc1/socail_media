@@ -55,6 +55,13 @@ app.get('/',(req, res, next) => {
   })
 app.use("/posts", PostRoute);
 app.use("/users", UserRoute);
+app.all('*',(req,res,next)=>{
+  //    next(new AppError(`can't find ${req.originalUrl} on the server`,404));
+  res.status(404).json({
+      result:"fail",
+      messege:`can't find ${req.originalUrl} on the server`
+  })
+  })
 app.use(globleErrorHandler);
 export default app;
 //
