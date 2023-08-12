@@ -47,6 +47,12 @@ app.use(bodyParser.json());
 //     data: "website is working",
 //   });
 // });
+app.get('/',(req, res, next) => {
+    return res.status(200).json({
+      result: "success",
+      data: "website is working",
+    });
+  })
 app.use("/posts", PostRoute);
 app.use("/users", UserRoute);
 app.use(globleErrorHandler);
