@@ -1,4 +1,4 @@
-import { Query, Document } from "mongoose";
+import {  Document } from "mongoose";
 
 interface QueryString {
   sort?: string;

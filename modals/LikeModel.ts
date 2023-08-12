@@ -1,6 +1,5 @@
 import mongoose, { Schema,Document } from "mongoose";
-import validator from "validator";
-import User from "./UserModel"
+
 
 interface Like extends Document {
   user: mongoose.ObjectId,

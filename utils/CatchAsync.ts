@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, NextFunction } from "express";
 
 export default (fn:Function) => {
     return (req:Request, res:Request, next:NextFunction) => {

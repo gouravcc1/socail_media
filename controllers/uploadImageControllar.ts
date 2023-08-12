@@ -1,4 +1,4 @@
-import express, { NextFunction, Response, Request } from "express";
+import  { NextFunction, Response, Request } from "express";
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import multer from "multer";
@@ -6,7 +6,6 @@ import config from "./../firebase.config";
 import CatchAsync from "../utils/CatchAsync";
 import sharp from "sharp";
 import AppError from "../utils/Apperror";
-import * as admin from "firebase-admin";
 const fapp = initializeApp(config.firebaseConfig);
 //   console.log(fapp);
 const storage = getStorage();

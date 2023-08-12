@@ -1,8 +1,5 @@
 import mongoose , { Schema, Document } from "mongoose";
 
-import validator from "validator";
-import User from "./UserModel"
-
 interface IComment extends Document {
   user: mongoose.ObjectId,
   post:mongoose.ObjectId,

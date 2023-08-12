@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import validator from "validator";
-import User from "./UserModel";
 
 interface Post {
   user: mongoose.ObjectId;

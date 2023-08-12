@@ -1,5 +1,4 @@
-import User from "../modals/UserModel";
-import express, { Request, Response, NextFunction } from "express";
+import  { Request, Response, NextFunction } from "express";
 import CatchAsync from "../utils/CatchAsync";
 import AppError from "../utils/Apperror";
 import Post from "../modals/PostModel";

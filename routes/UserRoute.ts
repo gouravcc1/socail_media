@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { signUp,login, protect, logout } from "../controllers/AuthenticationControllar";
 import {followAUser,GetAllFollowesOfAUser,GetAllFollowingOfAUser} from "./../controllers/FollowControlar"
 import {deleteAuser, getAuser,getAlluser, updateLoggedUser} from "./../controllers/UserControllar"

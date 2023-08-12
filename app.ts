@@ -8,7 +8,7 @@ import { isLoggedIn } from "./controllers/AuthenticationControllar";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
-import cors from "cors";
+
 
 const app = express();
 declare global {
@@ -18,11 +18,7 @@ declare global {
     }
   }
 }
-// app.use(cors.)
-const options: cors.CorsOptions = {
-  origin: '*',
-};
-app.use(cors(options));
+
 // security middleware
 app.use(helmet());
 app.use(cookieParser());

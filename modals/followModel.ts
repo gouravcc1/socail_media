@@ -1,8 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
-import User from "./UserModel";
 import AppError from "../utils/Apperror";
-import { NextFunction } from "express";
-
 interface IFollow extends Document {
   follower: mongoose.ObjectId;
   following: mongoose.ObjectId;

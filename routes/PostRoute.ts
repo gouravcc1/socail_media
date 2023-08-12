@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { deleteApost, getAllPostofFOllowing, postApost } from "./../controllers/PostControllar";
 import { protect } from "./../controllers/AuthenticationControllar";
 import {

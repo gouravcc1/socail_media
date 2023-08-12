@@ -4,7 +4,6 @@ import CatchAsync from "../utils/CatchAsync";
 import jwt from "jsonwebtoken";
 import AppError from "../utils/Apperror";
 import bcrypt from "bcrypt";
-import { promisify } from "util";
 
 const singedToken = (id: string) => {
   return jwt.sign(
